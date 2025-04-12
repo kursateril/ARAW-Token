@@ -1,0 +1,9 @@
+{
+  "name": "ARAW",
+  "symbol": "ARAW",
+  "decimals": 18,
+  "description": "ARAW is a BEP-20 token on Binance Smart Chain with a fixed supply of 15 quadrillion tokens.",
+  "website": "https://araw-token.io",
+  "github": "https://github.com/kullanici-adi/ARAW-Token",
+  "logoURI": "https://raw.githubusercontent.com/kullanici-adi/ARAW-Token/main/araw-with-bnb-final.png"
+}
