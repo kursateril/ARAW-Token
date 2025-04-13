@@ -63,5 +63,5 @@ This document does not constitute financial advice. Cryptocurrencies are volatil
 
 ## 10. Contact
 
-- **Email:** (your email here)  
+- **Email:** (erilkursat@gmail.com)  
 - **GitHub:** [https://github.com/kursateril/ARAW-Token](https://github.com/kursateril/ARAW-Token)
