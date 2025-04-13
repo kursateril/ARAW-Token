@@ -27,70 +27,177 @@
       "https://kursateril.github.io/ARAW-Token/",
       "https://twitter.com/arawtoken",
       "https://t.me/arawtoken",
-      "https://www.coingecko.com/en/coins/araw-token"
+      "mailto:erilkursat@gmail.com"
     ]
   }
   </script>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f9f9f9;
       margin: 0;
       padding: 0;
-      background: #f7f8fa;
-      color: #333;
     }
     .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
     }
-    header, section, footer {
-      margin-bottom: 40px;
+    header {
+      text-align: center;
+      padding-bottom: 30px;
     }
     header img {
-      max-width: 120px;
+      width: 120px;
     }
-    h1, h2 {
-      color: #2b2b2b;
+    h1 {
+      font-size: 2.5rem;
+      margin: 20px 0 10px;
+      color: #004AAD;
+    }
+    h2 {
+      color: #004AAD;
+    }
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
     }
     .buttons a, .buttons button {
       display: inline-block;
-      margin: 8px;
+      margin: 10px;
       padding: 10px 20px;
+      background: #004AAD;
+      color: white;
       text-decoration: none;
-      background: #007bff;
-      color: #fff;
-      border-radius: 5px;
-      transition: background 0.3s;
+      border-radius: 6px;
       border: none;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
     .buttons a:hover, .buttons button:hover {
-      background: #0056b3;
+      background: #00307a;
     }
-    .wallet-section, .transfer-section, .price-section {
-      margin-top: 40px;
+    .wallet-section, .transfer-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    input[type="text"], input[type="number"] {
-      width: 100%;
+    label {
+      display: block;
+      margin-bottom: 8px;
+      margin-top: 15px;
+    }
+    input {
       padding: 10px;
-      margin: 5px 0 20px;
+      width: 100%;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
     }
     iframe {
       width: 100%;
-      height: 500px;
+      height: 600px;
+      margin-top: 40px;
       border: none;
+      border-radius: 8px;
     }
     footer {
+      margin-top: 50px;
       text-align: center;
-      font-size: 0.9em;
+      font-size: 0.9rem;
       color: #777;
     }
   </style>
 </head>
 <body>
-  <!-- Body content remains unchanged from current version -->
+  <div class="container">
+    <header>
+      <img src="https://raw.githubusercontent.com/kursateril/ARAW-Token/main/ARAW-Token/logo.png" alt="ARAW Token Logo">
+      <h1>Welcome to ARAW Token</h1>
+      <p>The decentralized token fueling Web3 innovation on Binance Smart Chain.</p>
+    </header>
+
+    <section>
+      <h2>About ARAW</h2>
+      <p>
+        ARAW Token (ARAW) is a BEP-20 utility token deployed on Binance Smart Chain. Our mission is to simplify access to decentralized finance by offering a powerful token that integrates into real-world applications, gamification, rewards systems, and Web3 communities.
+      </p>
+    </section>
+
+    <section>
+      <h2>Key Resources</h2>
+      <div class="buttons">
+        <a href="https://bscscan.com/token/0x7F3802213135071a3E1984c862cCA9B1b1932dB8" target="_blank">View on BscScan</a>
+        <a href="https://github.com/kursateril/ARAW-Token" target="_blank">GitHub</a>
+        <a href="https://github.com/kursateril/ARAW-Token/blob/main/ARAW_Whitepaper_v1.md" target="_blank">Whitepaper</a>
+        <a href="https://poocoin.app/tokens/0x7f3802213135071a3e1984c862cca9b1b1932db8" target="_blank">PooCoin Chart</a>
+      </div>
+    </section>
+
+    <div class="wallet-section">
+      <h2>Wallet Interaction</h2>
+      <button onclick="connectWallet()">Connect MetaMask</button>
+      <p><strong>Wallet:</strong> <span id="walletAddress">Not connected</span></p>
+      <p><strong>ARAW Balance:</strong> <span id="tokenBalance">0</span> ARAW</p>
+    </div>
+
+    <div class="transfer-section">
+      <h2>Send ARAW Token</h2>
+      <label for="recipient">Recipient Address:</label>
+      <input type="text" id="recipient" placeholder="0x...">
+      <label for="amount">Amount:</label>
+      <input type="number" id="amount" placeholder="Amount in ARAW">
+      <button onclick="sendARAW()">Send</button>
+    </div>
+
+    <iframe src="https://pancakeswap.finance/swap?outputCurrency=0x7F3802213135071a3E1984c862cCA9B1b1932dB8" title="Swap ARAW"></iframe>
+
+    <section>
+      <h2>Contact Us</h2>
+      <p>Email: <a href="mailto:erilkursat@gmail.com">erilkursat@gmail.com</a></p>
+      <p>Telegram: <a href="https://t.me/arawtoken" target="_blank">@arawtoken</a></p>
+      <p>GitHub Issues: <a href="https://github.com/kursateril/ARAW-Token/issues" target="_blank">Report a problem</a></p>
+    </section>
+
+    <footer>
+      © 2025 ARAW Token. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    const tokenAddress = "0x7F3802213135071a3E1984c862cCA9B1b1932dB8";
+    const tokenABI = ["function balanceOf(address) view returns (uint256)", "function transfer(address to, uint amount) returns (bool)"];
+    let provider, signer, contract;
+
+    async function connectWallet() {
+      if (window.ethereum) {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        const address = await signer.getAddress();
+        document.getElementById("walletAddress").innerText = address;
+
+        contract = new ethers.Contract(tokenAddress, tokenABI, signer);
+        const balance = await contract.balanceOf(address);
+        document.getElementById("tokenBalance").innerText = ethers.utils.formatUnits(balance, 18);
+      } else {
+        alert("Please install MetaMask to interact");
+      }
+    }
+
+    async function sendARAW() {
+      const to = document.getElementById("recipient").value;
+      const amount = document.getElementById("amount").value;
+      if (!contract || !signer) return alert("Connect your wallet first.");
+      try {
+        const tx = await contract.transfer(to, ethers.utils.parseUnits(amount, 18));
+        await tx.wait();
+        alert("Transaction successful!");
+      } catch (e) {
+        alert("Transaction failed: " + e.message);
+      }
+    }
+  </script>
 </body>
 </html>
