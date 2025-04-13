@@ -4,7 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ARAW Token - Official Project Page</title>
+  <meta property="og:title" content="ARAW Token - BEP-20 Web3 Utility Token" />
+  <meta property="og:description" content="Explore ARAW Token - the utility token powering Web3 innovation on Binance Smart Chain." />
+  <meta property="og:image" content="https://raw.githubusercontent.com/kursateril/ARAW-Token/main/ARAW-Token/logo.png" />
+  <meta property="og:url" content="https://kursateril.github.io/ARAW-Token/" />
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Cryptocurrency",
+    "name": "ARAW Token",
+    "symbol": "ARAW",
+    "blockchain": "Binance Smart Chain",
+    "address": "0x7F3802213135071a3E1984c862cCA9B1b1932dB8",
+    "url": "https://kursateril.github.io/ARAW-Token/",
+    "image": "https://raw.githubusercontent.com/kursateril/ARAW-Token/main/ARAW-Token/logo.png",
+    "description": "ARAW Token (ARAW) is a BEP-20 utility token on Binance Smart Chain empowering decentralized finance, gamification, rewards systems, and Web3 communities.",
+    "sameAs": [
+      "https://bscscan.com/token/0x7F3802213135071a3E1984c862cCA9B1b1932dB8",
+      "https://poocoin.app/tokens/0x7F3802213135071a3E1984c862cca9b1b1932db8",
+      "https://github.com/kursateril/ARAW-Token"
+    ]
+  }
+  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -29,6 +51,9 @@
       margin: 20px 0 10px;
       color: #004AAD;
     }
+    h2 {
+      color: #004AAD;
+    }
     p {
       font-size: 1.1rem;
       line-height: 1.6;
@@ -48,7 +73,7 @@
     .buttons a:hover, .buttons button:hover {
       background: #00307a;
     }
-    .wallet-section, .transfer-section {
+    .wallet-section, .transfer-section, .price-section {
       background: #fff;
       padding: 20px;
       border-radius: 8px;
@@ -103,6 +128,18 @@
         <a href="https://bscscan.com/token/0x7F3802213135071a3E1984c862cCA9B1b1932dB8" target="_blank">View on BscScan</a>
         <a href="https://github.com/kursateril/ARAW-Token" target="_blank">GitHub Repository</a>
         <a href="https://github.com/kursateril/ARAW-Token/blob/main/ARAW_Whitepaper_v1.md" target="_blank">Read Whitepaper</a>
+        <a href="https://poocoin.app/tokens/0x7F3802213135071a3E1984c862cca9b1b1932db8" target="_blank">View on Poocoin</a>
+        <a href="https://www.coingecko.com/en/coins/araw-token" target="_blank">View on CoinGecko</a>
+        <button onclick="addTokenToMetaMask()">Add ARAW to MetaMask</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Community & Team</h2>
+      <p>Stay connected with the ARAW community and join the conversation. We’re building a decentralized future together.</p>
+      <div class="buttons">
+        <a href="https://t.me/arawtoken" target="_blank">Join Telegram</a>
+        <a href="mailto:info@arawtoken.io">Contact Us</a>
       </div>
     </section>
 
@@ -111,7 +148,7 @@
       <button onclick="connectWallet()">Connect MetaMask</button>
       <p><strong>Wallet:</strong> <span id="walletAddress">Not connected</span></p>
       <p><strong>ARAW Balance:</strong> <span id="tokenBalance">0</span> ARAW</p>
-      <p><strong>ARAW Price:</strong> <span id="tokenPrice">~$1.20 (simulated)</span></p>
+      <p><strong>ARAW Price:</strong> <span id="tokenPrice">~Fetching...</span></p>
     </div>
 
     <div class="transfer-section">
@@ -123,7 +160,11 @@
       <button onclick="sendARAW()">Send</button>
     </div>
 
-    <iframe src="https://pancakeswap.finance/swap?outputCurrency=0x7F3802213135071a3E1984c862cCA9B1b1932dB8" title="Swap ARAW"></iframe>
+    <div class="price-section">
+      <h2>Swap ARAW on PancakeSwap</h2>
+      <p>You can swap ARAW using PancakeSwap below:</p>
+      <iframe src="https://pancakeswap.finance/swap?outputCurrency=0x7F3802213135071a3E1984c862cCA9B1b1932dB8" title="Swap ARAW"></iframe>
+    </div>
 
     <footer>
       © 2025 ARAW Token. All rights reserved.
@@ -132,7 +173,15 @@
 
   <script>
     const tokenAddress = "0x7F3802213135071a3E1984c862cCA9B1b1932dB8";
-    const tokenABI = ["function balanceOf(address) view returns (uint256)", "function transfer(address to, uint amount) returns (bool)"];
+    const tokenSymbol = "ARAW";
+    const tokenDecimals = 18;
+    const tokenImage = "https://raw.githubusercontent.com/kursateril/ARAW-Token/main/ARAW-Token/logo.png";
+
+    const tokenABI = [
+      "function balanceOf(address) view returns (uint256)",
+      "function transfer(address to, uint amount) returns (bool)"
+    ];
+
     let provider, signer, contract;
 
     async function connectWallet() {
@@ -144,11 +193,17 @@
         document.getElementById("walletAddress").innerText = address;
 
         contract = new ethers.Contract(tokenAddress, tokenABI, signer);
-        const balance = await contract.balanceOf(address);
-        document.getElementById("tokenBalance").innerText = ethers.utils.formatUnits(balance, 18);
+        updateBalance();
+        fetchTokenPrice();
       } else {
         alert("Please install MetaMask to interact");
       }
+    }
+
+    async function updateBalance() {
+      const address = await signer.getAddress();
+      const balance = await contract.balanceOf(address);
+      document.getElementById("tokenBalance").innerText = ethers.utils.formatUnits(balance, tokenDecimals);
     }
 
     async function sendARAW() {
@@ -156,14 +211,45 @@
       const amount = document.getElementById("amount").value;
       if (!contract || !signer) return alert("Connect your wallet first.");
       try {
-        const tx = await contract.transfer(to, ethers.utils.parseUnits(amount, 18));
+        const tx = await contract.transfer(to, ethers.utils.parseUnits(amount, tokenDecimals));
         await tx.wait();
         alert("Transaction successful!");
+        updateBalance();
       } catch (e) {
         alert("Transaction failed: " + e.message);
+      }
+    }
+
+    function fetchTokenPrice() {
+      fetch("https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0x7f3802213135071a3e1984c862cca9b1b1932db8")
+        .then(res => res.json())
+        .then(data => {
+          const price = data?.data?.attributes?.price_usd;
+          document.getElementById("tokenPrice").innerText = price ? `$${parseFloat(price).toFixed(4)}` : "Not available";
+        })
+        .catch(() => {
+          document.getElementById("tokenPrice").innerText = "Unavailable";
+        });
+    }
+
+    async function addTokenToMetaMask() {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage,
+            },
+          },
+        });
+      } catch (error) {
+        console.error('Error adding token:', error);
       }
     }
   </script>
 </body>
 </html>
-
